@@ -1,0 +1,27 @@
+<div id="dashboard-wrapper" *ngIf="showDashboard">
+	<div id="top-nav">
+		<div class="company-title">
+			<h1><a [routerLink]="['/']">Angular Phalcon JWT</a></h1>
+		</div>
+		<div class="company-branch" *ngIf="branches">
+			<select (change)="switchBranch($event.target.value)">
+				<option *ngFor="let branch of branches" value="{{branch.id}}">{{branch.name}}</option>
+			</select>
+		</div>
+		<div class="header-link">
+			<span>Hi, {{username}}</span> <a [routerLink]="['/logout']">Logout</a>
+		</div>
+	</div>
+	<div id="content-wrapper">
+		<div id="side-nav">
+			<ul>
+				<li><a [routerLink]="['/']" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}"><i class="fa fa-desktop" aria-hidden="true"></i> &nbsp; Dashboard</a></li>
+				
+				<li><a [routerLink]="['/logout']"><i class="fa fa-sign-out" aria-hidden="true"></i> &nbsp; Logout</a></li>
+			</ul>
+		</div>
+		<div id="main">
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+</div>

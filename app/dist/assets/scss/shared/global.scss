@@ -1,0 +1,238 @@
+html, body {
+	height: 100%;
+	width: 100%;
+}
+
+body {
+	overflow: hidden;
+	background: #1c92d2; 
+	background: -moz-linear-gradient(-45deg, #1c92d2 0%, #f2fcfe 100%); 
+	background: -webkit-linear-gradient(-45deg, #1c92d2 0%,#f2fcfe 100%); 
+	background: linear-gradient(135deg, #1c92d2 0%,#f2fcfe 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1c92d2', endColorstr='#f2fcfe',GradientType=1 ); 
+
+	h1, h2, h3, h4, h5, h6 {
+		font-family: 'Saira Semi Condensed', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	}
+}
+
+body, .pure-g, .pure-g [class*=pure-u] {
+	font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-weight: lighter;
+}
+
+.clear {
+	clear: both;
+}
+
+::-webkit-input-placeholder {
+  color: rgba(white, 0.4);
+}
+:-ms-input-placeholder {
+  color: rgba(white, 0.4);
+}
+::-moz-placeholder {
+  color: rgba(white, 0.4);
+  opacity: 1;
+}
+:-moz-placeholder {
+  color: rgba(white, 0.4);
+  opacity: 1;
+}
+
+// Overwrites pure.css
+.pure-g {
+	margin-left: -10px;
+	margin-right: -10px;
+	div[class^="pure-u-"] {
+		padding: 3px 10px;
+		@include box-sizing("border-box");
+		select, input:not([type]), input[type=password], input[type=email], input[type=url], input[type=date], input[type=month], input[type=time], input[type=datetime], input[type=datetime-local], input[type=week], input[type=tel], input[type=color], input[type=file], input[type=number], input[type=search], input[type=text] {
+			width: 100%;
+		}
+	}
+}
+.pure-form input:focus:invalid {
+	border: 1px solid transparent;
+	color: inherit;
+}
+input.ng-invalid:focus {
+	&.ng-touched, &.ng-untouched, &.ng-dirty {
+		color: #198CD2;
+	}
+}
+
+// Customized windows and boxes
+.window-wrapper {
+	box-shadow: 1px 1px 5px rgba(0,0,0,0.4);
+	border-radius: 3px;
+	overflow: hidden;
+	color: #c9d1e0;
+	.window-header {
+		width: 100%;
+		padding: 5px 25px;
+		background: rgba(#5b6378, 0.8);
+		@include box-sizing(border-box);
+		h1, h2, h3, h4 {
+			margin: 0;
+			font-weight: normal;
+		}
+	}
+	.window-content {
+		padding: 25px;
+		width: 100%;
+		background: rgba(#393f4f, 0.8);
+		@include box-sizing(border-box);
+		input {
+			color: #198CD2;
+		}
+		p:first-child {
+			margin-top: 0;
+		}
+	}
+}
+
+// Alerts
+.alert {
+	padding: 15px 25px;
+	font-size: 14px;
+	background: rgba(#E1F3F8, 0.7);
+	border-left: 5px solid rgba(#00BFE7, 0.7);
+	color: #33608A;
+	border-radius: 3px;
+	&.success {
+		background: rgba(#e7f4e4, 0.7);
+		border-left: 5px solid rgba(#48a463, 0.7);
+		color: #265d1a;
+	}
+	&.warning {
+		background: rgba(#fff1d2, 0.7);
+		border-left: 5px solid rgba(#fdb81e, 0.7);
+		color: #94732b;
+	}
+	&.error {
+		background: rgba(#F9DEDE, 0.7);
+		border-left: 5px solid rgba(#E21C3D, 0.7);
+		color: #963143;
+	}
+	ul {
+		margin: 0;
+		padding-left: 1em;
+	}
+}
+
+// Buttons
+.pure-button {
+	background: #e3e2e0;
+	background: rgba(#e3e2e0, 0.7);
+}
+.pure-button-primary {
+	background: #3bbde1;
+	background: rgba(#3bbde1, 0.7);
+}
+.pure-button-secondary {
+	color: white;
+	background: #8a8d9c;
+	background: rgba(#8a8d9c, 0.7);
+}
+.pure-button-success {
+	color: white;
+	background: #49b164;
+	background: rgba(#49b164, 0.7);
+}
+.pure-button-error {
+	color: white;
+	background: #e8505d;
+	background: rgba(#e8505d, 0.7);
+}
+.pure-button-warning {
+	color: white;
+	background: #fabe4e;
+	background: rgba(#fabe4e, 0.7);
+}
+
+// Panels
+.panel {
+	padding: 25px;
+	margin-bottom: 15px;
+	//background: rgba(black, 0.1);
+	background: rgba(57, 63, 79, 0.7);
+	min-height: 50px;
+	color: white;
+	position: relative;
+	> h3:first-child, > p:first-child {
+		margin-top: 0;
+	}
+	a {
+		color: white;
+	}
+	.pure-table {
+		width: 100%;
+		border: 0;
+		thead {
+			background: transparent;
+			border-bottom: 1px solid #cbcbcb;
+			color: white;
+		}
+		th, td {
+			border: 0;
+			font-size: 14px;
+		}
+	}
+	input:not([type]), input[type=password], input[type=email], input[type=url], input[type=date], input[type=month], input[type=time], input[type=datetime], input[type=datetime-local], input[type=week], input[type=tel], input[type=color], input[type=file], input[type=number], input[type=search], input[type=text] {
+		background: transparent;
+		background: rgba(black, 0.1);
+		outline: none;
+		border: 1px solid rgba(black, 0.05);
+		box-shadow: inset 0 1px 3px rgba(black, 0.05);
+		&:focus {
+			border: 1px solid rgba(white, 0.6);
+			box-shadow: 0 1px 3px rgba(white, 0.05);
+			&.ng-invalid {
+				&.ng-touched, &.ng-untouched, &.ng-dirty {
+					color: white;
+				}
+			}
+		}
+
+	}
+	select {
+		color: white;
+		background: transparent;
+		border: 1px solid white;
+		border-radius: 2px;
+		padding: 5px;
+		outline: none;
+		option {
+			color: black;
+		}
+	}
+	.inactive {
+		color: rgba(white, 0.6);
+	}
+}
+
+// Panel Slides
+.panel-slides-wrapper {
+	position: relative;
+	.panel-slide {
+		position: absolute;
+		top: 0;
+		left: 0;
+		transform: translateX( calc(100% + 25px) );
+		opacity: 0;
+		width: 100%;
+		transition: all 0.3s;
+		overflow: hidden;
+		height: 100%;
+		&.active {
+			opacity: 1;
+			transform: translateX( 0 );
+			height: auto;
+		}
+		&.inactive-left {
+			transform: translateX( calc(-100% - 25px) );
+			opacity: 0;
+		}
+	}
+}

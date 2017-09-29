@@ -1,0 +1,47 @@
+<div id="alert-wrapper" *ngIf="showAlert">
+    <div class="window">
+        <div class="window-wrapper">
+            <div class="window-header">
+                <h2>{{alertSubject}}</h2>
+                <div class="window-close" (click)="closeAlert()">X</div>
+            </div>
+            <div class="window-content">
+                {{alertBody}}
+                <div *ngIf="reauthorize">
+                    <br />
+                    <form class="pure-form pure-form-stacked" name="login-form" [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+                        <div class="alert error" *ngIf="(showErrors && formErrors.length) || (showValidatorErrors && loginForm.invalid)">
+                            <ul *ngIf="showValidatorErrors && loginForm.invalid">
+                                <li *ngIf="loginForm.get('username').errors && loginForm.get('username').errors.required">
+                                    Username is required.
+                                </li>
+                                <li *ngIf="loginForm.get('username').errors &&loginForm.get('username').errors.minlength">
+                                    Username must be at least 3 characters long.
+                                </li>
+                                <li *ngIf="loginForm.get('password').errors && loginForm.get('password').errors.required">
+                                    Password is required
+                                </li>
+                                <li *ngIf="loginForm.get('password').errors && loginForm.get('password').errors.minlength">
+                                    Password must be at least 3 characters long.
+                                </li>
+                            </ul>
+                            <ul *ngIf="showErrors && formErrors.length">
+                                <li *ngFor="let error of formErrors">{{error}}</li>
+                            </ul>
+                        </div>
+                        <fieldset>
+                            <label for="username">Username</label>
+                            <input type="text" class="pure-input" name="username" formControlName="username" required />
+                            <br />
+                            <label for="password">Password</label>
+                            <input type="password" class="pure-input" name="password" formControlName="password" required />
+                            <br />
+                            <button class="pure-button pure-button-primary">Login</button>
+                            <button class="pure-button pure-button-error" (click)="closeAlert()">Logout</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

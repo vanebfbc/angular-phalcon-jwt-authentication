@@ -1,0 +1,66 @@
+#alert-wrapper, .general-wrapper-bg {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	z-index: 100000;
+	top: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background: rgba(black, 0.6);
+	.window {
+		max-width: 450px;
+	    width: 100%;
+	    padding: 0 25px;
+	    @include box-sizing(border-box);
+	}
+	.window-header {
+		position: relative;
+		padding-right: 45px;
+		h2 {
+			margin: 0!important;
+		}
+		.window-close {
+			font-size: 18px;
+			font-weight: bold;
+			color: rgba(255,255,255,0.8);
+			cursor: pointer;
+			position: absolute;
+			height: 25px;
+			width: 25px;
+			line-height: 25px;
+			right: 15px;
+		    top: 0;
+		    bottom: 0;
+		    margin: auto;
+		    text-align: center;
+			&:hover {
+				color: #b6bfd0;
+			}
+		}
+	}
+	.window-content {
+		fieldset {
+			width: 100%;
+		}
+		input:not([type]), select, input[type=password], input[type=email], input[type=url], input[type=date], input[type=month], input[type=time], input[type=datetime], input[type=datetime-local], input[type=week], input[type=tel], input[type=color], input[type=file], input[type=number], input[type=search], input[type=text] {
+			background: rgba(white, 0.85);
+			width: 100%;
+			&:focus {
+				border: 1px solid rgba(white, 0.6);
+				box-shadow: 0 1px 3px rgba(white, 0.05);
+				&.ng-invalid {
+					&.ng-touched, &.ng-untouched, &.ng-dirty {
+						color: #198CD2;
+					}
+				}
+			}
+
+		}
+		.pure-button {
+			color: white;
+		}
+	}
+}

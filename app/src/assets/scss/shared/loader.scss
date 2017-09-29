@@ -1,0 +1,141 @@
+$blendmode: screen;
+$size: 100px;
+$thickness: 5px;
+
+$color1: #247BA0;
+$color2: #77C170;
+$color3: #FFE066;
+$color4: #F25F5C;
+
+// $color1: white;
+// $color2: transparent;
+// $color3: white;
+// $color4: transparent;
+
+$timing: 4s;
+$delay: $timing/4;
+
+body {
+  .loader-bg {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    z-index: 1000000;
+  }
+  .loader-box {
+    -webkit-user-select: none;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    position: absolute;
+    background: rgba(black, 0.3);
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    
+    &:after {
+      content: '';
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
+      margin-right: -0.25em;
+    }
+    
+    .loader-content {
+      @include box-sizing(border-box);
+      @include animation(fadein $timing/200 linear forwards);
+      display: inline-block;
+      vertical-align: middle;
+      text-align: left;
+      font-size: 0;
+      opacity: 0;
+      position: relative;
+      .loader-text {
+        color: white;
+        font-size: 15px;
+      }
+    }
+  }
+  &.logged-in .loader-box {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+.loader-line-mask {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: $size/2;
+  height: $size;
+  margin-left: -$size/2;
+  margin-top: -$size/2;
+  overflow: hidden;
+  @include transform-origin($size/2 $size/2);
+  -webkit-mask-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+  mix-blend-mode: $blendmode;
+  opacity: 1;
+  
+  .loader-line {
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+  }
+  
+  &.one {
+    @include animation(rotate1 $timing infinite linear);
+    .loader-line {
+      box-shadow: inset 0 0 0 $thickness $color1;
+    }
+  }
+  
+  &.two {
+    @include animation(rotate2 $timing infinite linear);
+    transform: rotate(90deg);
+    .loader-line {
+      box-shadow: inset 0 0 0 $thickness $color2;
+    }
+  }
+  
+  &.three {
+    @include animation(rotate3 $timing infinite linear);
+    transform: rotate(180deg);
+    .loader-line {
+      box-shadow: inset 0 0 0 $thickness $color3;
+    }
+  }
+  
+  &.four {
+    @include animation(rotate4 $timing infinite linear);
+    transform: rotate(270deg);
+    .loader-line {
+      box-shadow: inset 0 0 0 $thickness $color4;
+    }
+  }
+}
+
+@include keyframes(rotate1) {
+  0% { transform: rotate(0deg); } 
+  100% { transform: rotate(360deg); }
+}
+@include keyframes(rotate2) {
+  0% { transform: rotate(90deg); } 
+  100% { transform: rotate(450deg); }
+}
+@include keyframes(rotate3) {
+  0% { transform: rotate(180deg); } 
+  100% { transform: rotate(540deg); }
+}
+@include keyframes(rotate4) {
+  0% { transform: rotate(270deg); } 
+  100% { transform: rotate(630deg); }
+}
+@include keyframes(fadein)
+{ 
+  0% { opacity: 0; } 
+  100% { opacity: 1; }
+}

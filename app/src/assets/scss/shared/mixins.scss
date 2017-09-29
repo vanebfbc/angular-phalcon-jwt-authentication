@@ -1,0 +1,53 @@
+@mixin box-sizing($str) {
+	@if $str {
+		-webkit-box-sizing: #{$str};
+		-moz-box-sizing: #{$str};
+		box-sizing: #{$str};
+    } @else {
+        -webkit-box-sizing: initial;
+		-moz-box-sizing: initial;
+		box-sizing: initial;
+    }
+}
+
+@mixin keyframes($animation-name) {
+    @-webkit-keyframes #{$animation-name} {
+        @content;
+    }
+    @-moz-keyframes #{$animation-name} {
+        @content;
+    }  
+    @-ms-keyframes #{$animation-name} {
+        @content;
+    }
+    @-o-keyframes #{$animation-name} {
+        @content;
+    }  
+    @keyframes #{$animation-name} {
+        @content;
+    }
+}
+
+@mixin animation($str) {
+	-webkit-animation: #{$str};
+	-moz-animation: #{$str};
+	-ms-animation: #{$str};
+	-o-animation: #{$str};
+	animation: #{$str};      
+}
+
+@mixin transform-origin($str) {
+	-webkit-transform-origin: #{$str};
+	-moz-transform-origin: #{$str};
+	-ms-transform-origin: #{$str};
+	-o-transform-origin: #{$str};
+	transform-origin: #{$str};
+}
+
+@mixin transition($args...) {
+	-webkit-transition: $args;
+	-moz-transition: $args;
+	-ms-transition: $args;
+	-o-transition: $args;
+	transition: $args;
+}
