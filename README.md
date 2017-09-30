@@ -1,4 +1,4 @@
-# Angular Phalcon JWT Authentication
+# Angular 4 and Phalcon (PHP) JWT Authentication
 This repository demonstrates how to implement JWT (JSON Web Token) authentication with Angular 4+ frontend and PHP REST API (Phalcon Micro) backend. It is already used in a project in poduction and I would like to share how it's done. To run this, you need to have a server that runs PHP. The source code contains two parts: frontend (Angular 4, in the 'app' directory), and backend (PHP running on Phalcon, in the 'web' directory). This project is inspired by Jason Watmore's [blog post](http://jasonwatmore.com/post/2016/08/16/angular-2-jwt-authentication-example-tutorial).
 
 My development environment as of September 28th, 2017:
@@ -91,6 +91,9 @@ $app = new Micro( $di );
 $app->handle();
 ```
 
+### JWT Library
+There are several [JWT libraries](https://jwt.io/) to choose from. In my example, [Firebase JWT](https://github.com/firebase/php-jwt) is used and is included in the code. You are welcome to try anything else!
+
 ### In-memory Database
 For demonstration purposes, the user database is coded into the helper class **DbHandler**. There are two user entries: johndoe and janesmith. The load_user() method will attempt to find the user with a username supplied.
 
@@ -124,8 +127,131 @@ I defined two controllers to handle the routes: **AuthenticationController**, wh
 "/initialize-dashboard": (GET or POST) JWT is required to access. In other words, users not authenticated should not access the dashboard at all.
 
 ### Login / JWT Generation
+The login post request submits credentials through JSON, so we can obtain the values the Phalcon way:
+```php
+$credentials = $app->request->getJsonRawBody();
+$username = $credentials->username;
+$password = $credentials->password;
+```
+
+We then use our DbHandler to find if the user exists and if password is correct. In production the handler should be connecting to a database instance directly. Once we find out the user is valid, then it's time to create the JWT for the user. Since we are using a two-step verification process, we create a JWT ID (JTI) to be part of the data payload. JTI can be anything from a sequence id to a random string as long as it's unique. Save this to the current user's cookie ('asuid' means Authenticated Session User ID).
+
+```php
+$time = time();
+$jti = bin2hex( random_bytes( 32 ) ) . "-" . bin2hex( $username );
+$app->cookies->set(
+  "asuid",
+  $jti,
+  $time + 28800
+);
+```
+
+Notice I have set an expiration time for the cookie (8 hours). Unless you want the user to remain logged in indefinitely, it's a good practice to always set an expiry time for your cookie.
+
+Next we create the data payload. Refer to the [guidelines of JWT](https://tools.ietf.org/html/draft-jones-json-web-token-07) to construct your data array; pay attention to reserved claims.
+
+```php
+$time = time();
+$tokenData = array(
+  "iss" => "Angular Phalcon JWT", // Issued by (entity)
+  "iat" => $time, // Issued at (time)
+  "nbf" => $time, // Not valid before (time)
+  "exp" => $time + 28800, // Expired at (time)
+  "jti" => $jti, // JWT ID
+  // ...any othe custom cliams
+);
+
+```
+
+Finally, generate the JWT using the Firebase library.
+
+```php
+use Firebase\JWT\JWT;
+
+$jwt = JWT::encode(
+  $tokenData,
+  $key, // Your secret key
+  'HS512' // Algorithm
+);
+```
+
+Remember to include the JWT string in the response body so the frontend can use it in the subsequent requests.
 
 ### JWT Validation
+JWT is validated in index.php as it controls all routings. I think it might be a better idea to separate the validation logic in a separate file, but for the time being this will do. The following code excludes some routes from JWT validation:
+
+```php
+$jwtExempt = in_array( ltrim( $_SERVER['REQUEST_URI'], "/" ), 
+	array(
+    'login',
+    'logout',
+    'service-check'
+	) 
+);
+
+if ( !$jwtExempt ) {
+  // Validation required
+}
+
+```
+
+Since JWT is sent throught the header "Authorization", we can get it and strip it of the preceeding "Bearer" from the following code:
+
+```php
+$jwt = $di->getRequest()->getHeader( "Authorization" );
+if ( $jwt ) {
+  $prefix = "Bearer ";
+  if ( substr( $jwt, 0, strlen( $prefix ) ) == $prefix ) {
+    $jwt = trim( substr( $jwt, strlen( $prefix ) ) );
+  }
+}
+```
+
+Now that we have the JWT from request, we validate it in two steps:
+
+**Step 1**: Decode with the Firebase JWT library. Note that unsuccessful decode will raise an exception, so we need to catch it. Specifically, ExpiredException is raised if the "exp" time is past, and SignatureInvalidException is raised if signature does not match the payload.
+
+**Step 2**: Use JTI to validate the current active user. During JWT generation, JTI is also saved as a cookie id for the authentiated session user ("asuid"); if the two values don't match, it means the current user is changed or is using an invalid JWT.
+
+```php
+use Firebase\JWT\JWT;
+
+$valid = false;
+try {
+  $key = $secretKey;
+  $token = JWT::decode( $jwt, $key, array('HS512') );
+  // JWT is valid, now compare JTI
+  if ( $cookies->get( "asuid" ) == $token->jti ) {
+    // JTI is valid
+    $valid = true;
+  }
+  
+} catch ( Firebase\JWT\ExpiredException $e ) {
+  // If JWT has expired
+} catch ( Firebase\JWT\SignatureInvalidException $e ) {
+  // If signature does not match payload data
+} catch ( Exception $e ) {
+  // Anything else
+}
+```
+
+Depending on whether the route requires JWT validation and validation results, content can be delivered accordingly.
+
+### A Few Words About Security
+(1) Authentication is all about security. In the AuthenticationController, we have the following unhashed comparison for password:
+```php
+if ( $password == $user->password ) {
+  // Authentication successful
+}
+```
+This is not a good practice in terms of security. Remember to hash your passwords in production environment.
+
+(2) JWT uses a secret key to encode the token signature; this key is loaded through a config file in the project, but you can also store it in a database.
+
+(3) JTI can be anything as long as you can ensure its uniqueness during your operation timeframe.
+
+(4) In root index.php, $di registers a 'crypt' service which uses an encryption key to encrypt cookies set by the backend. This prevents XSS attacks as long as your key is very hard to crack. Alternatively, you can set your cookies to be HttpOnly.
+
 
 ## Further Readings
 [Jason Watmore's Blog](http://jasonwatmore.com/post/2016/08/16/angular-2-jwt-authentication-example-tutorial)
