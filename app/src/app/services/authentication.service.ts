@@ -29,10 +29,4 @@ export class AuthenticationService extends BaseService {
 		
 	}
 
-	register( username: string, email: string, password: string ) {
-		return this.http.post( this.api_url + 'register', JSON.stringify( { username: username, email: email, password: password } ) )
-			.map( ( response : Response ) => {
-				return response.json();
-			} );
-	}
 }

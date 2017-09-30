@@ -19,7 +19,7 @@ class DashboardController extends Controller
 		$this->response
 			->setJsonContent( 
 				$this->json->create(
-					array( ok => true ), true
+					array( "ok" => true ), true
 				)
 			)
 			->setStatusCode( 200, "OK" );

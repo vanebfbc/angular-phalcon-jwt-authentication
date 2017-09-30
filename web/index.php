@@ -99,7 +99,6 @@ $jwt = $di->getRequest()->getHeader( "Authorization" );
 $jwtExempt = in_array( ltrim( $_SERVER['REQUEST_URI'], "/" ), 
 	array(
 		'login',
-		'register',
 		'logout',
 		'service-check'
 	) 
